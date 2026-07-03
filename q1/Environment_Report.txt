@@ -1,0 +1,32 @@
+Q1: Linux Environment Verification
+=================================
+
+Command: whoami
+Output:
+codespace
+Observation: This confirmed the active login username for the current shell session.
+
+Command: groups
+Output:
+codespace pipx python oryx golang docker sdkman rvm php conda nvs nvm hugo ssh
+Observation: These are the supplementary groups associated with the current account.
+
+Command: echo "$SHELL"
+Output:
+/bin/bash
+Observation: The shell in use was verified as Bash.
+
+Command: pwd
+Output:
+/workspaces/sga-exam/q1
+Observation: The current working directory was confirmed as the Q1 workspace folder.
+
+Command: ls -ls
+Output:
+total 0
+Observation: The workspace directory did not contain any files at the time of the check.
+
+Command: curl -s --max-time 10 https://youtube.com > /dev/null && echo "Network: youtube.com reachable"
+Output:
+Network: youtube.com reachable
+Observation: Network access to the external site was verified successfully.

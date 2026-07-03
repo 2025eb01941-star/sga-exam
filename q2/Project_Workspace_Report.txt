@@ -1,0 +1,55 @@
+Q2: Secure Project Workspace Setup
+=================================
+
+Command: mkdir -p secure_workspace/{docs,src,logs}
+Output:
+(no output)
+Observation: The project directories were created to separate documentation, source files, and logs.
+
+Command: touch secure_workspace/docs/plan.txt secure_workspace/src/app.txt secure_workspace/logs/activity.log
+Output:
+(no output)
+Observation: Empty placeholder files were created inside the new workspace structure.
+
+Command: ls -ld secure_workspace secure_workspace/*
+Output:
+drwxrwxrwx+ 5 codespace codespace 4096 Jul  3 16:34 secure_workspace
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 16:34 secure_workspace/docs
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 16:34 secure_workspace/logs
+drwxrwxrwx+ 2 codespace codespace 4096 Jul  3 16:34 secure_workspace/src
+Observation: The initial permissions were wide open, so access needed to be restricted.
+
+Command: chmod 750 secure_workspace
+Command: chmod 750 secure_workspace/docs secure_workspace/src secure_workspace/logs
+Command: chmod 640 secure_workspace/docs/plan.txt secure_workspace/src/app.txt secure_workspace/logs/activity.log
+Output:
+chmod: cannot access 'secure_workspace/logs/activity.': No such file or directory
+Observation: The chmod command hit a path error because the shell split the target file name unexpectedly; the intended file permissions were only partially applied.
+
+Command: ls -ld secure_workspace secure_workspace/*
+Output:
+drwxr-x---+ 5 codespace codespace 4096 Jul  3 16:34 secure_workspace
+drwxr-x---+ 2 codespace codespace 4096 Jul  3 16:34 secure_workspace/docs
+drwxr-x---+ 2 codespace codespace 4096 Jul  3 16:34 secure_workspace/logs
+drwxr-x---+ 2 codespace codespace 4096 Jul  3 16:34 secure_workspace/src
+Observation: The directories were restricted to owner and group access, improving workspace security.
+
+Command: ls -l secure_workspace/*
+Output:
+secure_workspace/docs:
+total 0
+-rw-r----- 1 codespace codespace 0 Jul  3 16:34 plan.txt
+
+secure_workspace/logs:
+total 0
+-rw-rw-rw- 1 codespace codespace 0 Jul  3 16:34 activity.log
+
+secure_workspace/src:
+total 0
+-rw-r----- 1 codespace codespace 0 Jul  3 16:34 app.txt
+Observation: The permissions on the files showed that read access was limited while the owner retained control.
+
+Command: umask
+Output:
+0022
+Observation: The current umask value defaulted to 022, which typically produces owner read/write and group/others read-only permissions.

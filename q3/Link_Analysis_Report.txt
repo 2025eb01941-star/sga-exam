@@ -1,0 +1,72 @@
+Q3: File System and Link Analysis
+================================
+
+Command: rm -f original.txt hardlink.txt symlink.txt
+Output:
+(no output)
+Observation: Any previous test files were removed to start the experiment from a clean state.
+
+Command: echo "Linux link test file" > original.txt
+Output:
+(no output)
+Observation: A source file was created to serve as the basis for the link comparison.
+
+Command: ln original.txt hardlink.txt
+Command: ln -s original.txt symlink.txt
+Command: ls -li
+Output:
+total 8
+1310805 -rw-rw-rw- 2 codespace codespace 21 Jul  3 16:38 hardlink.txt
+1310805 -rw-rw-rw- 2 codespace codespace 21 Jul  3 16:38 original.txt
+1310807 lrwxrwxrwx 1 codespace codespace 12 Jul  3 16:38 symlink.txt -> original.txt
+Observation: The hard link shared the same inode as the original file, while the symbolic link had a different inode and pointed to the target name.
+
+Command: stat original.txt hardlink.txt symlink.txt
+Output:
+File: original.txt
+Size: 21              Blocks: 8          IO Block: 4096   regular file
+Device: 7,4     Inode: 1310805     Links: 2
+File: hardlink.txt
+Size: 21              Blocks: 8          IO Block: 4096   regular file
+Device: 7,4     Inode: 1310805     Links: 2
+File: symlink.txt -> original.txt
+Size: 12              Blocks: 0          IO Block: 4096   symbolic link
+Device: 7,4     Inode: 1310807     Links: 1
+Observation: The metadata confirmed that hard links are directory entries for the same inode, while symbolic links are separate files that reference a path.
+
+Command: cat original.txt
+Output:
+Linux link test file
+Observation: The original file still contained the expected content.
+
+Command: cat hardlink.txt
+Output:
+Linux link test file
+Observation: The hard link displayed the same content because it referred to the same inode.
+
+Command: cat symlink.txt
+Output:
+Linux link test file
+Observation: The symbolic link resolved correctly and exposed the same file content.
+
+Command: rm original.txt
+Output:
+(no output)
+Observation: Deleting the original filename removed one directory entry, but the underlying data remained available through the hard link.
+
+Command: ls -li
+Output:
+total 4
+1310805 -rw-rw-rw- 1 codespace codespace 21 Jul  3 16:38 hardlink.txt
+1310807 lrwxrwxrwx 1 codespace codespace 12 Jul  3 16:38 symlink.txt -> original.txt
+Observation: The hard link remained intact, while the symbolic link became broken because it still pointed to the removed original name.
+
+Command: cat hardlink.txt
+Output:
+Linux link test file
+Observation: The hard link still worked because the data remained on disk.
+
+Command: cat symlink.txt
+Output:
+cat: symlink.txt: No such file or directory
+Observation: The symbolic link failed because its target path no longer existed.

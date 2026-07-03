@@ -1,0 +1,66 @@
+Q5: Storage Assessment and Documentation
+=======================================
+
+Command: lsblk
+Output:
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+loop0     7:0    0 63.8M  1 loop 
+loop1     7:1    0 91.7M  1 loop 
+loop2     7:2    0 49.3M  1 loop 
+loop3     7:3    0  257G  0 loop 
+loop4     7:4    0   32G  0 loop /workspaces/.codespaces/.persistedshare
+                                 /home/vscode/.minikube
+                                 /var/lib/docker
+                                 /etc/hosts
+                                 /etc/hostname
+                                 /etc/resolv.conf
+                                 /workspaces
+loop5     7:5    0  500M  0 loop 
+sda       8:0    0   45G  0 disk 
+└─sda1    8:1    0   45G  0 part /tmp
+sdb       8:16   0   30G  0 disk 
+├─sdb1    8:17   0 29.9G  0 part /workspaces/.codespaces/shared
+│                                /.codespaces/bin
+│                                /vscode
+│                                /usr/sbin/docker-init
+├─sdb14   8:30   0    4M  0 part 
+└─sdb15   8:31   0  106M  0 part 
+sdc       8:32   0  512G  0 disk 
+└─sdc1    8:33   0  512G  0 part 
+sr0      11:0    1  628K  0 rom
+Observation: The block device inventory showed the main disks and partitions available in the environment.
+
+Command: mount | head -5
+Output:
+overlay on / type overlay (rw,relatime,lowerdir=...)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+tmpfs on /dev type tmpfs (rw,nosuid,size=65536k,mode=755,inode64)
+devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=666)
+sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
+Observation: The mounted filesystems were listed, confirming the main root and temporary mounts in use.
+
+Command: df -h
+Output:
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          32G  9.6G   21G  33% /
+tmpfs            64M     0   64M   0% /dev
+shm              64M     0   64M   0% /dev/shm
+/dev/root        29G   24G  5.4G  82% /vscode
+/dev/sda1        44G  2.8G   39G   7% /tmp
+/dev/loop4       32G  9.6G   21G  33% /workspaces
+Observation: Disk usage was moderate, and the root filesystem still had enough free space for regular use.
+
+Command: df -i
+Output:
+Filesystem      Inodes  IUsed   IFree IUse% Mounted on
+overlay        2097152 203080 1894072   10% /
+tmpfs          1016899    213 1016686    1% /dev
+shm            1016899      1 1016688    1% /dev/shm
+/dev/root      3870720 243637 3627083    7% /vscode
+/dev/sda1      2949120     40 2949080    1% /tmp
+/dev/loop4     2097152 203080 1894072   10% /workspaces
+Observation: Inode utilization was low, indicating that the current environment had no immediate inode shortage.
+
+Summary:
+The storage assessment showed that the environment had healthy free disk space and ample inode capacity. The main recommendation is to continue routine monitoring and remove unnecessary files or logs as the workload grows.
+
